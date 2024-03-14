@@ -1,0 +1,235 @@
+<!-- Creating a component -->
+// Type the following command in the terminal
+ng g c MyButton
+
+<!-- Adding components to the other files -->
+// Make sure to import the component at the top of the file in the app.component.ts file
+// Also make sure to add them to the imports array in the app.components.ts file after importing.
+// It should look like this...
+import { MyButtonComponent } from './my-button/my-button.component';
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    imports: [MyButtonComponent, ...], // the "..." is where we would add more components if we had them
+    standalone: true
+})
+
+<!-- For loops-->
+<ul>
+    @for(player of players; track player.id){
+        <li>{{ index }} {{ player.name }}</li>
+    } @ empty {
+        <li>No players found</li>
+    }
+</ul>
+
+note that the array needs to specify the type
+players : {id:number, anem:string}[] = [];
+
+<!-- If statements-->
+<ul>
+    @if(true){
+        @for(player of players; track player.id){
+            <li>{{ index }} {{ player.name }}</li>
+    } @else {
+        <li>nothing to see</li>
+    }
+    }
+</ul>
+
+<!-- Interfaces-->
+// Defining an interface using cli command
+ng g interface Player
+
+// Rember to import the interface at the top of the file
+// Assigning the interface to a variable
+players : Player[] = [];
+
+<!-- Services -->
+// Defining a service using cli command
+ng g s players
+
+// Add the data now into the service so that dependency injection can be used later on.
+// Remeber to add the interface to the service as well.
+players : Player[] = [
+    {id:1, name:'John'},
+    {id:2, name:'Doe'},
+    {id:3, name:'Jane'},
+    {id:4, name:'Doe'}
+]
+
+// Now we write a method to return the data.
+// Remember that Player[] is the interface.
+getPlayers() : Player[]{
+    return this.players;
+}
+
+// To inject the service into a component use the following command.
+// Remember to import the service at the top of the file
+playerService = inject(PlayerService);
+
+<!-- Event Handling -->
+// Generic event Handling
+<button (event)="????">Click me</button>
+
+// Click event handling
+<button (click)="onClick()">Click me</button>
+
+// Input event handling
+// The $event is a special variable that holds the event object
+<input type="text" (keyup)="onKeyup($event)" name="message" />
+// To get the value of the input field, use the event.target and cast it to a HTML element
+(event.target as HTMLInputElement).value
+
+// Change event handling
+(change)="onChange($event)"
+// To get the value from the select element we use the code below
+(event.target as HTMLSelectElement).value
+
+<!-- Passing data in from a component -->
+// Inside the export class of the component, use the following code
+@Input() count = "";
+
+// Now from the parent component, use the following code to pass the value in as a string
+<app-clicked-button count="0"></app-clicked-button>
+// To pass in a number, use the following code inside the component export
+// And use the quick fix to import the transform package
+@Input({ transform: numberAttribute }) count = 0;
+
+<!-- Property Binding -->
+// Create a variable in the component with the src link ie assets/image.jpg
+imageUrl: string = "assets/image.jpg";
+// Replace the src tag in the image tag with the following code
+[src]="imageUrl"
+
+<!-- Pipes -->
+// Go to www.angular.io/guide/pipes to see the list of pipes.
+// pipes work like the below
+{{ player.name | uppercase }}
+{{ player.salary | currency: 'EUR' : true : '1.2-2' }}
+{{ player.date | date: 'shortDate' }}
+
+<!-- Bootstrap & Forms -->
+// Install bootstrap using the following command
+npm install bootstrap
+
+// Add the following code to the styles.css file
+@import "bootstrap/dist/css/bootstrap.css";
+
+// Then simply add a form and add teh bootstrap classes to the form elements
+<h1>Contact Form</h1>
+<form [formGroup]="contactForm">
+    <div class="form-group">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" formControlName="name" class="form-control" id="name" name="name" />
+    </div>
+    <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" formControlName="email" class="form-control" id="email" name="email" />
+    </div>
+    <div class="form-group">
+        <label for="message" class="form-label">Message</label>
+        <textarea class="form-control" formControlName="email" id="message" name="message"></textarea>
+    </div>
+    <button (click)="submit()" class="btn btn-primary">Submit</button>
+
+    <!-- Reactive Form Creation -->
+    // Start by adding the ReactiveFormsModule to the components file
+    import { ReactiveFormsModule } from '@angular/forms';
+
+    // Add the ReactiveFormsModule to the imports array
+    imports: [ReactiveFormsModule]
+
+    // Create a form group in the component file
+    contactForm = new FormGroup({
+        name: new FormControl(''),
+        email: new FormControl(''),
+        message: new FormControl('')
+    });
+
+    // to target the form group in the html file, use the following code
+    <p>Name: {{ contactForm.value.name }}</p>
+    <p>Email: {{ contactForm.value.email }}</p>
+    <p>Message: {{ contactForm.value.message }}</p>
+
+    <!-- HTTP Data Retriving -->
+    // First import the HttpClientModule into the app.config.ts file through dependency injection
+    export const appConfig: ApplicationConfig = {
+        providers: [proivdeRouter(routes), provideHttpClient(withFetch())]
+    }
+
+    // Next, through the component constructor, inject the HttpClient
+    constructor(private http: HttpClient){}
+
+    // Next, create a variable with the url endpoint
+    url = 'https://jsonplaceholder.typicode.com/posts';
+
+    // Next, create a method to get the data from the endpoint
+    getPosts() : Observable<any> {
+        return this.http.get(this.url);
+    }
+
+    // We can also define the type of data that we are expecting to get back from the endpoint
+    getPosts() : Observable<Players[]>{
+        return this.http.get<Players[]>(this.url);
+    }
+
+    // Then inside the component constructor we do the following
+    constructor(){
+        this.playerService.getPlayers().subscribe(data => {
+            this.players = data;
+        });
+    }
+
+    // To POST data to the endpoint, we use the following code in the component to post it
+    addPlayer() {
+        this.playerService.addPlayer(this.newPlayer).subscribe(data => {
+            console.log(data);
+        });
+    }
+
+    // Before that, we need to add the "addPlayer" method to the service
+    addPlayer(player: Player){
+        return this.http.post<Player>(this.url, player);
+    }
+
+    // Note that the player variable is the data that we want to post to the endpoint, so it can be json format or more.
+
+    <!-- Routing -->
+    // Make sure that the app.routes.ts file is created and the routes are defined as below, this is blank but we will add routes later on.
+
+    import { Routes } from '@angular/router';
+
+    export const routes: Routes = [];
+
+    // Next, make sure that the "provideRouter(routes)" code is located in the app.config.ts file inside the providers array.
+
+    // Once we have some routes that we want to add to the other components, we do it like below...
+    export const routes: Routes = [
+        { path: '', component: HomeComponent, title: "Home Page" }, // This is the default route, which is why the path is empty
+        { path: 'about', component: AboutComponent title: "About Page" },
+        { path: 'contact', component: ContactComponent title: "Contact Page" }
+    ];
+
+    // Next we need to import the router link before assigning links to the html file of our nav, we add these into the app.component.ts file
+    imports: [RouterLink, RouterOutlet]
+
+    // Make sure to add the imports for them also
+    import { RouterLink, RouterOutlet } from '@angular/router';
+
+    // We also need to import them into the nav bar, so inside the imports array inside the nav bar component do the following...
+    imports: [RouterLink, RouterOutlet]
+
+    // Now we can add the links to the nav bar
+    <nav>
+        <ul>
+            <li><a routerLink="/">Home</a></li>
+            <li><a routerLink="about">About</a></li>
+            <li><a routerLink="contact">Contact</a></li>
+        </ul>
+    </nav>
+    <router-outlet></router-outlet>
+
+    // Make sure that <router-outlet></router-outlet> is located at the bottom of the nav component file

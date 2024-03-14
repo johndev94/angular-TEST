@@ -1,0 +1,44 @@
+<form [formGroup]="playerForm">
+    <h2>Player - {{newPlayer.name}}</h2>
+    <div class="container mt-3">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Full Name</th>
+                    <th>DOB</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>     
+                    <td>
+                        <div class="form-group">
+                            <input type="number" formControlName="id" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" formControlName="name" class="form-control">
+                        </div>        
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" formControlName="full_name" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="date" formControlName="dob" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" type="button" (click)="updatePlayer()">Update</button>&nbsp;
+                        <button class="btn btn-danger" type="button" (click)="deletePlayer()">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>

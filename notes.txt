@@ -1,0 +1,39 @@
+# Create new project
+ng new hello-world
+cd hello-world
+ng serve
+
+npm install -g typescript
+npm install -g @angular/cli
+set PATH=%PATH%;c:\Users\John\AppData\Roaming\npm;
+tsc --version
+
+# Create a component
+ng g c MyButton
+
+# Create a interface 
+ng g interface Player
+
+# Create a service 
+ng g s players
+
+# Bootstrap
+npm i bootstrap --save 
+
+# RestAPI server
+create server.js
+node server.js
+
+component > service > API
+
+app.config.ts  >
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(withFetch())]
+};
+
+players.service.ts > 
+constructor(private http: HttpClient) { }
+
+# Router
+Add RouterLink + RouterOutlet to app.components
+Add RouterLink + RouterOutlet to nav.components.ts imports

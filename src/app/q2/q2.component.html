@@ -1,0 +1,12 @@
+<div class="timer-container">
+    <div class="timer-display">
+      {{ counter / 1000 | number: '1.0-3' }} seconds
+    </div>
+  
+    <div class="timer-controls">
+      <button (click)="startTimer()">{{ startText }}</button>
+
+      <button (click)="clearTimer()" [disabled]="!running && counter === 0">Clear</button>
+    </div>
+  </div>
+  

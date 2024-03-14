@@ -1,0 +1,22 @@
+<h2>Players</h2>
+<ul>
+    
+    @for(player of players; track player.id; ){
+        <li>
+            <a routerLink = "/player/{{player.id}}">{{ player.name }}</a>
+        </li>
+    }
+    
+</ul>
+<button (click)="addPlayers()">Add Players</button>
+<p>{{ newPlayer | json}}</p>
+
+
+<!-- <h2>Players</h2>
+<ul>
+    @for(player of players; track player.id; ){
+        <li>{{$index}} {{ player.name }}</li>
+    } @empty{
+        <li>No players found</li>
+    }
+</ul> -->

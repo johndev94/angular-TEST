@@ -1,0 +1,18 @@
+
+<button (click)="onClick()">Click me!</button>
+<p></p>
+
+<input type="text" (keyup)="onKeyup($event)" name="message">
+<p></p>
+
+<select (change)="onChange($event)">
+  <option value="Apples">Apples</option>
+  <option value="Pears">Pears</option>
+  <option value="Oranges">Oranges</option>
+</select>
+
+<p></p>
+<img [src]="imgURL">
+```
+
+```typescript
